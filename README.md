@@ -39,8 +39,9 @@ See [docs/stack.md](./docs/stack.md) for the rationale behind each choice.
 
 ## Prerequisites
 
-- Node.js 24 LTS (use the version pinned in `.nvmrc`)
-- pnpm 9+
+- Node.js 24 LTS — pinned via [Volta](https://volta.sh/) in `package.json` (`volta` field)
+- pnpm 10+ — pinned via the `packageManager` field in `package.json`, managed by Corepack
+- Run `corepack enable` once (it ships with Node) to enable automatic pnpm version switching
 - Docker (for the local PostgreSQL container)
 - Google Cloud account with **Places API** and **Maps JavaScript API** enabled
 - Resend account for transactional emails
