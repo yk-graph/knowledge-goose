@@ -1,0 +1,12 @@
+node_modules
+.next
+.vercel
+.amplify
+out
+build
+dist
+coverage
+public
+drizzle/meta
+pnpm-lock.yaml
+*.log
