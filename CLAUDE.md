@@ -44,7 +44,7 @@ After making changes, always run `pnpm lint`, `pnpm typecheck`, and tests (when 
 - `schemas/` — Zod validation schemas
 - `types/` — Shared TypeScript types
 - `docs/` — Design documentation (English primary; `docs/ja/` for Japanese)
-- `notes/` — Development blog entries (EN/JA pairs, `NN_en_blog.md` / `NN_ja_blog.md`)
+- `notes/` — Development blog entries (EN/JA pairs: `NN_en_blog.md` / `NN_ja_blog.md`)
 - `drizzle/` — Auto-generated migration files (committed to git)
 - `.claude/` — ClaudeCode commands and skills
 
@@ -57,7 +57,7 @@ For the full architectural breakdown, see `docs/architecture.md`.
 - **File naming** — `kebab-case.ts` for files; `PascalCase.tsx` for React component files
 - **Import order** — external packages → internal absolute paths (`@/...`) → relative paths
 - **Server Actions are preferred** over API Routes. Only create `app/api/*` for: (1) better-auth catch-all, (2) Google Places proxy
-- **Validation lives in `schemas/`** as Zod validation schemas; types are inferred from those schemas in `types/`
+- **Validation lives in `schemas/`** as Zod schemas; types are inferred from those schemas in `types/`
 - **Derived values are NOT persisted** — `estimated_revenue`, `day_of_week`, `time_band` are computed at display time
 
 For detailed rules, see `docs/conventions.md`.
@@ -93,18 +93,6 @@ Be especially cautious with:
 
 When the user expresses certain intents, perform the action automatically. **Do not ask for confirmation before executing these.**
 
-### Blog Post Auto-Save
-
-Trigger phrases (Japanese or English): "make this a blog post", "save this as a blog entry", "let's record this in the dev blog", "ブログにしたい", "記事として残したい", "開発ブログに書いて", or similar.
-
-When triggered:
-
-1. Save the **Japanese version** to `notes/<NN>_ja_blog.md` (zero-padded 2-digit number)
-2. Save the **English translation** to `notes/<NN>_en_blog.md` in parallel
-3. Serial number = (max existing number) + 1
-4. Display both file paths after saving
-5. No prior confirmation needed
-
 ### Documentation Translation Sync
 
 When a file under `docs/` (English) is created or updated:
@@ -119,6 +107,8 @@ When a file under `docs/` (English) is created or updated:
 6. No prior confirmation needed
 
 When a file under `docs/ja/` (Japanese) is updated, perform the inverse: update the corresponding English file under `docs/`.
+
+> **Note**: To write a development blog post, use the `/blog` slash command.
 
 ## Common Pitfalls (Project-Specific)
 
