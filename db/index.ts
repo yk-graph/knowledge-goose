@@ -3,7 +3,14 @@ export { db } from './client'
 export type { Db } from './client'
 
 // Re-export schema tables
-export { users, restaurants, observations } from './schema'
+export {
+  users,
+  sessions,
+  accounts,
+  verifications,
+  restaurants,
+  observations,
+} from './schema'
 
 // Re-export enums
 export {
@@ -18,6 +25,12 @@ export {
 export type {
   User,
   NewUser,
+  Session,
+  NewSession,
+  Account,
+  NewAccount,
+  Verification,
+  NewVerification,
   Restaurant,
   NewRestaurant,
   Observation,

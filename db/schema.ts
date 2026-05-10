@@ -57,24 +57,86 @@ export const timeBandEnum = pgEnum('time_band', [
 
 // =====================================================
 // Users
-// NOTE: Columns will be expanded when better-auth is
-// configured. The `role` column is our custom addition;
-// all other columns follow better-auth's Drizzle adapter
-// requirements. Run `npx @better-auth/cli generate` if
-// the auth migration diverges from this definition.
+// better-auth core fields + custom `role` column.
 // =====================================================
 
 export const users = pgTable('users', {
-  // better-auth uses text (not uuid) for user IDs
   id: text('id').primaryKey(),
   email: text('email').notNull().unique(),
   email_verified: boolean('email_verified').notNull().default(false),
   name: text('name').notNull(),
   image: text('image'),
 
-  // Custom field (not from better-auth core)
   role: userRoleEnum('role').notNull().default('staff'),
 
+  created_at: timestamp('created_at', { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updated_at: timestamp('updated_at', { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+})
+
+// =====================================================
+// Sessions (better-auth managed)
+// =====================================================
+
+export const sessions = pgTable('sessions', {
+  id: text('id').primaryKey(),
+  user_id: text('user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  expires_at: timestamp('expires_at', { withTimezone: true }).notNull(),
+  token: text('token').notNull().unique(),
+  ip_address: text('ip_address'),
+  user_agent: text('user_agent'),
+  created_at: timestamp('created_at', { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updated_at: timestamp('updated_at', { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+})
+
+// =====================================================
+// Accounts (better-auth managed — OAuth + password)
+// =====================================================
+
+export const accounts = pgTable('accounts', {
+  id: text('id').primaryKey(),
+  user_id: text('user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  provider_id: text('provider_id').notNull(),
+  account_id: text('account_id').notNull(),
+  access_token: text('access_token'),
+  refresh_token: text('refresh_token'),
+  id_token: text('id_token'),
+  access_token_expires_at: timestamp('access_token_expires_at', {
+    withTimezone: true,
+  }),
+  refresh_token_expires_at: timestamp('refresh_token_expires_at', {
+    withTimezone: true,
+  }),
+  scope: text('scope'),
+  password: text('password'),
+  created_at: timestamp('created_at', { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updated_at: timestamp('updated_at', { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+})
+
+// =====================================================
+// Verifications (better-auth managed — email tokens)
+// =====================================================
+
+export const verifications = pgTable('verifications', {
+  id: text('id').primaryKey(),
+  identifier: text('identifier').notNull(),
+  value: text('value').notNull(),
+  expires_at: timestamp('expires_at', { withTimezone: true }).notNull(),
   created_at: timestamp('created_at', { withTimezone: true })
     .defaultNow()
     .notNull(),
@@ -218,6 +280,12 @@ export const observations = pgTable(
 
 export type User = typeof users.$inferSelect
 export type NewUser = typeof users.$inferInsert
+export type Session = typeof sessions.$inferSelect
+export type NewSession = typeof sessions.$inferInsert
+export type Account = typeof accounts.$inferSelect
+export type NewAccount = typeof accounts.$inferInsert
+export type Verification = typeof verifications.$inferSelect
+export type NewVerification = typeof verifications.$inferInsert
 export type Restaurant = typeof restaurants.$inferSelect
 export type NewRestaurant = typeof restaurants.$inferInsert
 export type Observation = typeof observations.$inferSelect
