@@ -62,22 +62,29 @@ For the full architectural breakdown, see `docs/architecture.md`.
 
 For detailed rules, see `docs/conventions.md`.
 
-## Library Documentation and Tooling
+## Library Documentation
 
-When you need information about a library's API or current best practices, query the appropriate MCP server rather than relying on training data alone. The `package.json` is the source of truth for installed versions.
+Use the source listed below for each library. Do not rely on training data alone. The `package.json` is the source of truth for installed versions.
 
-| MCP Server | Use for |
-| --- | --- |
-| `context7` | Drizzle ORM, Tailwind CSS, Recharts, react-hook-form, Next.js, shadcn/ui, and any library not covered by a dedicated server |
-| `zod` | Zod schema validation — official Zod × Inkeep MCP endpoint |
-| `better-auth` | better-auth auth setup, diagnostics, configuration |
-| `playwright` | Browser automation, visual verification, E2E testing |
+| Library | Source | Reason |
+| --- | --- | --- |
+| **Next.js** | `node_modules/next/dist/docs/` | Installed version's own docs — always in sync. Per AGENTS.md. |
+| **better-auth** | `better-auth` MCP server | Official MCP provided by the library team |
+| **Zod** | `zod` MCP server (Inkeep) | Officially endorsed by the Zod team |
+| **Drizzle ORM** | `context7` MCP server | Covered by Context7 |
+| **Tailwind CSS** | `context7` MCP server | Covered by Context7 |
+| **Recharts** | `context7` MCP server | Covered by Context7 |
+| **react-hook-form** | `context7` MCP server | Covered by Context7 |
+| **shadcn/ui** | `context7` MCP server | Covered by Context7 |
+| **Playwright** | `playwright` MCP server | Used for browser automation and E2E |
 
-When using Context7, note in your response which library and version you queried (e.g., "Per Context7 docs for drizzle-orm v0.45.x..."). This allows the user to verify the source.
+> **Next.js is the exception**: never use Context7 for Next.js. Read `node_modules/next/dist/docs/` directly — it ships with the installed version and is always accurate. Context7 may contain mixed v14/v15/v16 content.
+
+When using Context7, state in your response which library and version you queried (e.g., "Per Context7 docs for drizzle-orm v0.45.x...") so the user can verify the source.
 
 ## When Documentation Sources Conflict
 
-If an MCP server response contradicts your training data, or there are suspicious signs (the API does not compile, the example does not match the installed version in `package.json`), do the following:
+If an MCP response contradicts your training data, or there are suspicious signs (the API does not compile, the example does not match the installed version in `package.json`), do the following:
 
 1. State the discrepancy explicitly to the user
 2. Cross-check by reading `node_modules/<package>/README.md` or the package's official GitHub repository
